@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # ═══════════════════════════════════════════════════════════════════
-#  💖 羽蝉NIKKI一键化酒馆部署 💖 (Termux 版 v3.6 · 全自动一条龙)
+#  💖 羽蝉NIKKI一键化酒馆部署 💖 (Termux 版 v3.7 · 全自动一条龙)
 #  开源程序 · 仅供学习交流使用 · 完全免费
 #  如果收费，恭喜你被骗了。请联络 QQ 群获取正确渠道。
 #  QQ群：778585992
@@ -23,9 +23,6 @@ ST_GITHUB="https://github.com/SillyTavern/SillyTavern.git"
 # 酒馆助手（作者官方：GitLab / GitHub）
 HELPER_GITEE="https://gitlab.com/novi028/JS-Slash-Runner.git"
 HELPER_GITHUB="https://github.com/N0VI028/JS-Slash-Runner.git"
-# 记忆插件 yuzuki-Memory（作者官方：Gitee / GitHub）
-MEMORY_GITEE="https://gitee.com/gaigai315/yuzuki-Memory.git"
-MEMORY_GITHUB="https://github.com/gaigai315/yuzuki-Memory.git"
 # npm 源
 NPM_CN="https://registry.npmmirror.com"
 NPM_FOREIGN="https://registry.npmjs.org"
@@ -204,6 +201,7 @@ install_tavern() {
 # ── 安装酒馆依赖 ──
 install_deps() {
   echo -e "${CYAN}[*] 安装酒馆依赖 (npm install)...${NC}"
+  echo -e "${YELLOW}    ⏳ 这一步会久一点，请耐心等待，一会儿就好啦~${NC}"
   setup_npm_source
   cd "$ST_DIR"
   if [ ! -d "node_modules" ]; then
@@ -236,26 +234,6 @@ install_helper() {
   if clone_repo "酒馆助手" "$HELPER_GITEE" "$HELPER_GITHUB" "$dest"; then
     echo -e "${GREEN}    酒馆助手安装完成${NC}"
     echo -e "${YELLOW}    ⚠ 首次使用请到酒馆【扩展】面板勾选启用「酒馆助手」${NC}"
-  fi
-}
-
-# ── 安装记忆插件 ──
-install_memory() {
-  local dest="$EXT_DIR/yuzuki-Memory"
-  if [ ! -d "$ST_DIR" ]; then
-    echo -e "${RED}[!] 未检测到酒馆，请先完成酒馆安装${NC}"
-    return 1
-  fi
-  if [ -d "$dest/.git" ]; then
-    echo -e "${GREEN}[*] 记忆插件已安装，拉取最新...${NC}"
-    cd "$dest" && git pull 2>&1 || true
-    return 0
-  fi
-  echo -e "${CYAN}[*] 安装记忆插件 yuzuki-Memory...${NC}"
-  mkdir -p "$EXT_DIR"
-  if clone_repo "记忆插件" "$MEMORY_GITEE" "$MEMORY_GITHUB" "$dest"; then
-    echo -e "${GREEN}    记忆插件安装完成${NC}"
-    echo -e "${YELLOW}    ⚠ 首次使用请到酒馆【扩展】面板勾选启用「yuzuki-Memory」${NC}"
   fi
 }
 
@@ -293,21 +271,16 @@ plugin_guide() {
   echo ""
   echo -e "${CYAN}  要顺便装点好用的插件吗？${NC}"
   echo -e "  ${GREEN}[1]${NC} 安装酒馆助手 (Tavern Helper)"
-  echo -e "  ${GREEN}[2]${NC} 安装记忆插件 (yuzuki-Memory)"
-  echo -e "  ${GREEN}[3]${NC} 不装了，直接结束"
+  echo -e "  ${GREEN}[2]${NC} 不装了，直接结束"
   echo ""
-  echo -n "  请输入选项 [1-3]: "
+  echo -n "  请输入选项 [1-2]: "
   read -r choice || choice=""
   case "${choice:-}" in
     1)
       install_helper
       plugin_guide
       ;;
-    2)
-      install_memory
-      plugin_guide
-      ;;
-    3|*)
+    2|*)
       echo -e "${GREEN}  好嘞，那就不装插件啦~${NC}"
       return 0
       ;;

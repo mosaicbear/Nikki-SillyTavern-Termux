@@ -11,11 +11,11 @@
 
 ## ✨ 版本选择
 
-*   **`install_termux.sh` -> 📱 安卓Termux版 (v3.6 全自动)**
+*   **`install_termux.sh` -> 📱 安卓Termux版 (v3.7 全自动)**
     *   **无需魔法上网**：内置原作者官方国内源（Gitee/GitLab），自动切换双源。
-    *   **一条命令全自动**：自动装依赖 → 装酒馆 → 引导装插件，全程不用管。
+    *   **一条命令全自动**：自动装依赖 → 装酒馆 → 引导装酒馆助手，全程不用管。
     *   锁定的稳定版本：SillyTavern **v1.18.0**。
-    *   可选插件：酒馆助手 (Tavern Helper) + 记忆插件 (yuzuki-Memory)。
+    *   附带酒馆助手 (Tavern Helper) 可选装。
     *   适合想在手机上随时随地玩耍的小仙女。
 
 ## 🚀 如何安装 (第一次使用)
@@ -53,14 +53,21 @@ curl -fsSL https://raw.githubusercontent.com/mosaicbear/Nikki-SillyTavern-Termux
 1. 自动换国内源 + 装依赖（git / node / curl）
 2. 自动下载酒馆本体 v1.18.0（国内源优先，失败自动切国外）
 
-> 💡 **想装插件？** 上面的命令装完会自动跳过插件选择（管道安装没法交互）。
-> 想手动选插件，把 `| bash` 换成下面这种写法（保留交互）：
-> ```bash
-> bash -c "$(curl -fsSL https://gitee.com/mosaicb/Nikki-SillyTavern-Termux/raw/main/install_termux.sh)"
-> ```
-> 装完会问你要不要装「酒馆助手」或「记忆插件」，选 1 / 2 装，选 3 结束。
-
 > 装完后启动酒馆：`cd ~/SillyTavern && ./start.sh`，浏览器打开 `http://127.0.0.1:8000`
+
+---
+
+## 🎀 酒馆助手（可选装）
+
+酒馆助手 (Tavern Helper) 是给酒馆加 buff 的增强插件，一键奶人包自带支持。
+
+上面的命令装完只会装酒馆本体，**想装酒馆助手**用下面这种写法跑一遍（会弹出选择菜单）：
+```bash
+bash -c "$(curl -fsSL https://gitee.com/mosaicb/Nikki-SillyTavern-Termux/raw/main/install_termux.sh)"
+```
+菜单选 `[1] 安装酒馆助手`，装完去酒馆「扩展」面板勾选启用。
+
+> 嫌麻烦不装也不影响玩，酒馆本体装完就能用。
 
 ---
 
@@ -72,7 +79,6 @@ curl -fsSL https://raw.githubusercontent.com/mosaicbear/Nikki-SillyTavern-Termux
 |--------|--------------|--------------|
 | 酒馆本体 | Gitee 极速下载镜像 `gitee.com/mirrors/sillytavern` | GitHub 官方 `SillyTavern/SillyTavern` |
 | 酒馆助手 | GitLab 官方 `gitlab.com/novi028/JS-Slash-Runner` | GitHub 官方 `N0VI028/JS-Slash-Runner` |
-| 记忆插件 yuzuki-Memory | Gitee 官方 `gitee.com/gaigai315/yuzuki-Memory` | GitHub 官方 `gaigai315/yuzuki-Memory` |
 | npm 依赖 | npmmirror | npm 官方 |
 | Termux 软件源 | 清华镜像 | 官方源 |
 
@@ -100,12 +106,53 @@ curl -fsSL https://raw.githubusercontent.com/mosaicbear/Nikki-SillyTavern-Termux
 
 ---
 
+## 🗑️ 卸载与备份（不想玩了 / 想重装 / 怕丢记录）
+
+### 💾 先备份聊天记录（强烈建议）
+
+你的聊天记录、角色卡、设置全部存在 `~/SillyTavern/data` 目录里。想留记录，先备份它：
+
+1. 先开存储权限（只用一次）：`termux-setup-storage`，然后重启 Termux
+2. 打包备份到手机存储：
+   ```bash
+   tar -czf ~/storage/shared/sillytavern_backup.tar.gz -C ~/SillyTavern data
+   ```
+   跑完去手机「文件」里找 `sillytavern_backup.tar.gz`，存到电脑/网盘更保险。
+
+### 🧹 只删酒馆、保留 Termux 环境
+
+```bash
+rm -rf ~/SillyTavern
+```
+以后想重新玩，直接重跑上面的一键部署命令即可。
+
+### ☠️ 彻底卸载（连 Termux 一起删光）
+
+酒馆装在 Termux 的数据目录里，**卸载 Termux App 会把酒馆 + 聊天记录 + 全部环境一起清空**：
+安卓设置 → 应用 → Termux → 卸载
+
+> ⚠️ 卸载前想留记录，一定先做上面「备份」那步，别删完才想起来。
+
+### ♻️ 备份 → 卸载 → 重装 → 恢复（完整流程）
+
+1. **备份**：跑上面的 `tar` 命令，确认 `sillytavern_backup.tar.gz` 存在
+2. **卸载** Termux（安卓设置 → 应用 → Termux → 卸载）
+3. **重装** Termux（见上面第一步）
+4. **部署** 酒馆（见上面第二步，跑一键部署命令）
+5. **恢复记录**：
+   ```bash
+   cd ~/SillyTavern && tar -xzf ~/storage/shared/sillytavern_backup.tar.gz
+   ```
+6. 重启酒馆，聊天记录就回来啦~
+
+---
+
 ## 📁 项目里都有什么
 
 | 文件 | 是干嘛的 |
 |------|---------|
-| `install_termux.sh` | 安卓 Termux 一键部署（全自动：依赖 + 酒馆 + 引导插件） |
-| `plugins/README.md` | 酒馆推荐插件清单（TTS / 记忆 / 表情包等） |
+| `install_termux.sh` | 安卓 Termux 一键部署（全自动：依赖 + 酒馆本体 + 可选酒馆助手） |
+| `plugins/README.md` | 一键奶人包介绍（本体 + 酒馆助手） |
 | `patch/mark-inject.js` | 可选小工具：给酒馆页面加"开源免费·被骗加群"水印标注（想自己分享给朋友时用，跑 `node patch/mark-inject.js` 即可） |
 
 ---
