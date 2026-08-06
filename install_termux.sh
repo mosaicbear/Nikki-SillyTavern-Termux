@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # ═══════════════════════════════════════════════════════════════════
-#  💖 羽蝉NIKKI一键化酒馆部署 💖 (Termux 版 v3.2 · 全自动一条龙)
+#  💖 羽蝉NIKKI一键化酒馆部署 💖 (Termux 版 v3.3 · 全自动一条龙)
 #  开源程序 · 仅供学习交流使用 · 完全免费
 #  如果收费，恭喜你被骗了。请联络 QQ 群获取正确渠道。
 #  QQ群：778585992
@@ -64,7 +64,7 @@ check_termux() {
   fi
 }
 
-# ── 配置 Termux pkg 国内源（国内优先，双向兜底）──
+# ── 配置 Termux pkg 国内源（写源 + apt update 真实验证，失败自动回退）──
 setup_pkg_source() {
   echo -e "${CYAN}[*] 检查 Termux 软件源（国内优先）...${NC}"
   # 新版 Termux(0.118+) 源在 sources.list.d/termux-main.list，旧版在 sources.list
@@ -77,25 +77,25 @@ setup_pkg_source() {
     mkdir -p "$PREFIX/etc/apt"
     src_file="$PREFIX/etc/apt/sources.list"
   fi
-  # 快速测清华镜像源是否可达（3秒超时）
-  if curl -s --max-time 3 -o /dev/null "$PKG_CN/dists/stable/InRelease" 2>/dev/null; then
-    if grep -q "mirrors.tuna.tsinghua.edu.cn" "$src_file" 2>/dev/null; then
-      echo -e "${GREEN}    已使用国内源（清华镜像）${NC}"
-    else
-      sed -i 's@^\(deb.*stable main\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main stable main@' "$src_file" 2>/dev/null || true
-      # 若文件里没有可替换的 deb 行，直接追加清华源
-      if ! grep -q "mirrors.tuna.tsinghua.edu.cn" "$src_file" 2>/dev/null; then
-        echo "deb https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main stable main" >> "$src_file"
-      fi
-      echo -e "${GREEN}    已切换为国内源（清华镜像）${NC}"
-    fi
+  # 源里已含清华 → 跳过，不用再折腾
+  if grep -q "mirrors.tuna.tsinghua.edu.cn" "$src_file" 2>/dev/null; then
+    echo -e "${GREEN}    已使用国内源（清华镜像）${NC}"
+    echo -e "${GREEN}    软件源就绪${NC}"
+    return 0
+  fi
+  # 备份原源，注释旧 deb 行，写入清华源
+  local backup="${src_file}.nikkibak"
+  cp "$src_file" "$backup" 2>/dev/null || true
+  sed -i 's@^\(deb.*stable main\)$@#\1@' "$src_file" 2>/dev/null || true
+  echo "deb https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main stable main" >> "$src_file"
+  echo -e "${CYAN}[*] 已写入清华源，验证连通性（apt update）...${NC}"
+  # 用 apt update 真实验证清华源能不能用
+  if apt update >/dev/null 2>&1; then
+    echo -e "${GREEN}    清华源生效 ✔${NC}"
+    rm -f "$backup" 2>/dev/null || true
   else
-    echo -e "${YELLOW}[*] 国内源不可用，保留官方源...${NC}"
-    if ! curl -s --max-time 3 -o /dev/null "$PKG_FOREIGN/dists/stable/InRelease" 2>/dev/null; then
-      echo -e "${RED}[!] 国内源和官方源都连不上，请检查网络${NC}"
-    else
-      echo -e "${GREEN}    官方源可用${NC}"
-    fi
+    echo -e "${YELLOW}[*] 清华源不可用，恢复原源继续...${NC}"
+    cp "$backup" "$src_file" 2>/dev/null || true
   fi
   echo -e "${GREEN}    软件源就绪${NC}"
 }
