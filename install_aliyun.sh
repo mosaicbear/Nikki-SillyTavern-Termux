@@ -13,7 +13,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # 恢复默认
 
 echo -e "${PINK}✨✨ 欢迎使用 羽蝉NIKKI一键化酒馆部署 (阿里云/Linux通用版) ✨✨${NC}"
-echo -e "${CYAN}马上就要开始咯~ 请确保你正在使用root用户或者有sudo权限哦！(o´ω`o)ﾉ${NC}"
+echo -e "${CYAN}马上就要开始咯~ 请确保你正在使用root用户或者有sudo权限哦！(o_o)ﾉ${NC}"
 echo ""
 
 # 更新软件包

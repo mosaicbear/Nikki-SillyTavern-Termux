@@ -9,9 +9,10 @@
 
 ## ✨ 版本选择
 
-*   **`install_termux.sh` -> 📱 安卓Termux版 (v2.0)**
-    *   **需要魔法上网环境**，因为它需要从GitHub拉取代码。
-    *   升级内容：release 稳定分支 + 热门插件预置 + 定制水印 + 密码引导页
+*   **`install_termux.sh` -> 📱 安卓Termux版 (v3.0)**
+    *   **无需魔法上网**：内置 Gitee 国内镜像，自动切换双源。
+    *   锁定的稳定版本：SillyTavern **v1.18.0**。
+    *   可选插件：酒馆助手 (Tavern Helper) + 记忆插件 (ST-Memory-Context)。
     *   适合想在手机上随时随地玩耍的小仙女。
 
 *   **`install_aliyun.sh` -> ☁️ 阿里云/Linux通用版**
@@ -20,85 +21,107 @@
 
 ## 🚀 如何安装 (第一次使用)
 
-### 📱 Termux (安卓手机)
+### 📱 第一步：安装 Termux
 
-1.  **下载项目**：
-    *   打开Termux，复制粘贴下面的咒语，然后按回车：
-      ```bash
-      git clone https://github.com/mosaicbear/Nikki-SillyTavern-Termux.git
-      ```
+**安卓手机必须先装 Termux**（没有它酒馆跑不起来）：
+
+*   **方法1（国内推荐，免魔法）**：
+    1. 用浏览器打开清华镜像下载 F-Droid 客户端：
+       `https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/`
+    2. 安装 F-Droid，打开后：设置 → 存储库 → 添加清华镜像源
+    3. 搜索 **Termux** → 安装
+*   **方法2（国外）**：直接下载 `https://f-droid.org/repo/com.termux.apk`
+
+> ⚠️ **注意**：不要用 Google Play 商店的旧版 Termux（会跑不起来），一定用 F-Droid 的。
+
+### 📱 第二步：部署酒馆
+
+1.  **下载项目**：打开 Termux，复制粘贴下面的咒语，然后按回车：
+    ```bash
+    git clone https://github.com/mosaicbear/Nikki-SillyTavern-Termux.git
+    ```
 2.  **进入项目文件夹**：
-    *   继续念咒语：
-      ```bash
-      cd Nikki-SillyTavern-Termux
-      ```
+    ```bash
+    cd Nikki-SillyTavern-Termux
+    ```
 3.  **运行安装脚本**：
-    *   最后一步，运行我们的安装魔法！
-      ```bash
-      chmod +x install_termux.sh && ./install_termux.sh
-      ```
-    *   脚本会自动完成所有安装步骤，耐心等待它跑完哦~
+    ```bash
+    chmod +x install_termux.sh && ./install_termux.sh
+    ```
+4.  脚本会弹出菜单，选 `1` 或 `2` 开始安装，等它跑完就行。
 
 ### ☁️ 阿里云 / Linux服务器 (免魔法)
 
 1.  **下载项目**：
-    *   连接到你的服务器后，复制粘贴下面的咒语，然后按回车：
-      ```bash
-      git clone https://github.com/mosaicbear/Nikki-SillyTavern-Termux.git
-      ```
+    ```bash
+    git clone https://github.com/mosaicbear/Nikki-SillyTavern-Termux.git
+    ```
 2.  **进入项目文件夹**：
-    *   继续念咒语：
-      ```bash
-      cd Nikki-SillyTavern-Termux
-      ```
+    ```bash
+    cd Nikki-SillyTavern-Termux
+    ```
 3.  **运行安装脚本**：
-    *   最后一步，运行我们的安装魔法！
-      ```bash
-      chmod +x install_aliyun.sh && ./install_aliyun.sh
-      ```
-    *   脚本会自动完成所有安装步骤，耐心等待它跑完哦~
+    ```bash
+    chmod +x install_aliyun.sh && ./install_aliyun.sh
+    ```
 
 ---
 
+## 🎮 安装脚本菜单
+
+运行 `install_termux.sh` 后，会出现这样的菜单：
+
+```
+  羽蝉NIKKI · 酒馆一键部署
+  ════════════════════════
+  [1] 安装酒馆纯净版 v1.18.0
+  [2] 一键安装（酒馆 + 酒馆助手）
+  [3] 单独安装酒馆助手
+  [4] 安装记忆插件 ST-Memory-Context
+  [5] 退出
+```
+
+*   **选项1**：只装酒馆本体（纯净版 v1.18.0）
+*   **选项2**：酒馆 + 酒馆助手一起装（推荐新手）
+*   **选项3**：已有酒馆，单独补装酒馆助手
+*   **选项4**：已有酒馆，单独安装记忆插件（自动记忆表格 + 隐藏楼层省 Token）
+
+> 装完插件后，**打开酒馆 → 扩展 → 勾选启用**对应插件才能生效哦！
+
+## 🌐 双源说明
+
+脚本所有下载都内置了**国内 + 国外双源**，自动切换：
+
+| 下载项 | 国内源（优先） | 国外源（兜底） |
+|--------|--------------|--------------|
+| 酒馆本体 | Gitee 镜像 | GitHub 官方 |
+| 酒馆助手 | Gitee 镜像 | GitHub 官方 |
+| 记忆插件 | Gitee 镜像 | GitHub 官方 |
+| npm 依赖 | npmmirror | npm 官方 |
+| Termux 软件源 | 清华镜像 | 官方源 |
+
+国内网络优先走 Gitee，失败自动切 GitHub，全程不用你操心。
+
 ## 💖 如何启动 / 再次启动酒馆 (日常使用)
 
-安装好之后，每次想玩的时候，只需要跟着下面的步骤就可以啦！
-
-1.  **打开Termux或连接服务器**。
-2.  **找到酒馆的家**：
-    *   念出咒语，回到我们项目的文件夹：
-      ```bash
-      cd Nikki-SillyTavern-Termux
-      ```
-    *   再念一次咒语，进入酒馆的房间：
-      ```bash
-      cd SillyTavern
-      ```
+1.  **打开Termux**。
+2.  **进入酒馆目录**：
+    ```bash
+    cd SillyTavern
+    ```
 3.  **启动酒馆**：
-    *   最后，念出启动咒语：
-      ```bash
-      ./start.sh
-      ```
-4.  **开始玩耍**：
-    *   **Termux用户**：在手机浏览器访问 `http://127.0.0.1:8000`
-    *   **服务器用户**：在电脑浏览器访问 `http://<你的服务器公网IP>:8000` (请确保服务器的8000端口是开放的哦！)
+    ```bash
+    ./start.sh
+    ```
+4.  **开始玩耍**：手机浏览器访问 `http://127.0.0.1:8000`
 
-> 💡 **Termux 快捷启动**：也可以直接运行项目根目录的 `./start.sh`，未部署时会自动引导安装。
-
-## 🎁 v2.0 新增内容
-
-*   **release 稳定分支**：默认拉取 SillyTavern 官方 release 分支，更稳定。
-*   **热门插件预置**：提供插件推荐清单（TTS / 摘要防失忆 / 向量记忆 / 角色卡查看器）。
-*   **定制水印**：酒馆页面底部注入「羽蝉NIKKI · 开源免费」标记 + 群号，正版防冒认。
-*   **密码引导页**：下载前需输入密码（`guide/guide.html`），密码在 QQ 群免费获取，强制防滥用。
+---
 
 ## 💖 加入我们
 
 遇到问题或者想找姐妹们聊天？快来加入我们的QQ群吧！
 
 **QQ群号：778585992**
-
-<img src="qq群.jpg" width="250">
 
 ---
 
