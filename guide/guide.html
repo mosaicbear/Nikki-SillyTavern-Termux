@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>羽蝉NIKKI · 酒馆一键部署 · 访问验证</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#2b1a3d,#1a2e4a,#0f3460);color:#eaeaea}
+.card{background:rgba(255,255,255,.06);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);
+  border-radius:20px;padding:40px 36px;width:min(92vw,400px);text-align:center}
+.logo{font-size:26px;font-weight:800;letter-spacing:1px;background:linear-gradient(90deg,#ff5c8a,#ffb86b);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+.sub{font-size:12px;color:#999;margin-bottom:28px}
+.tag{font-size:11px;color:#ffb86b;border:1px solid rgba(255,184,107,.4);display:inline-block;
+  padding:2px 12px;border-radius:20px;margin-bottom:24px;letter-spacing:.5px}
+input{width:100%;padding:13px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.2);
+  background:rgba(0,0,0,.3);color:#fff;font-size:15px;margin-bottom:14px;outline:none;text-align:center;letter-spacing:3px}
+input:focus{border-color:#ff5c8a}
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;
+  background:linear-gradient(90deg,#ff5c8a,#ffb86b);color:#fff;transition:.2s;margin-bottom:18px}
+.btn:hover{opacity:.88}
+.qr-hint{font-size:12px;color:#aaa;line-height:1.7}
+.qr-hint b{color:#ffb86b}
+.err{color:#ff6b6b;font-size:12px;min-height:18px;margin-bottom:8px}
+.qq{font-size:13px;color:#ff5c8a;font-weight:700;cursor:pointer}
+.footer{margin-top:20px;font-size:10px;color:#666;line-height:1.6}
+.hidden{display:none}
+.dl-link{display:inline-block;margin-top:8px;padding:12px 0;width:100%;border-radius:12px;
+  background:rgba(255,255,255,.12);color:#fff;text-decoration:none;font-size:14px;font-weight:600;border:1px solid rgba(255,255,255,.2)}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">羽蝉NIKKI</div>
+  <div class="sub">酒馆 (SillyTavern) 手机端一键部署包</div>
+  <div class="tag">开源 · 免费 · 仅供学习交流</div>
+
+  <!-- 验证区 -->
+  <div id="verifyBox">
+    <input type="password" id="pwd" placeholder="请输入访问密码" autocomplete="off">
+    <div class="err" id="err"></div>
+    <button class="btn" onclick="checkPwd()">解锁下载</button>
+    <div class="qr-hint">
+      不知道密码？加入 QQ 群免费获取<br>
+      <span class="qq" onclick="copyQQ()">QQ群：<span id="qqNum">778585992</span></span>
+    </div>
+  </div>
+
+  <!-- 下载区（验证通过后显示） -->
+  <div id="dlBox" class="hidden">
+    <div style="font-size:14px;color:#8ce99a;margin-bottom:16px">✔ 验证通过，欢迎使用</div>
+    <a class="dl-link" href="#" onclick="downloadPkg();return false">⬇ 下载一键部署包 (install.sh + 插件)</a>
+    <div class="qr-hint" style="margin-top:14px">
+      安装问题？加入 QQ 群<br><span class="qq" onclick="copyQQ()">QQ群：<span id="qqNum2">778585992</span></span>
+    </div>
+  </div>
+
+  <div class="footer">
+    开源程序 · 仅供学习交流使用 · 完全免费<br>
+    如果收费，恭喜你被骗了。<br>
+    请通过 QQ 群获取正确渠道
+  </div>
+</div>
+
+<script>
+// ── 访问密码（改这里）。不知道密码的去 QQ 群获取 ──
+var ACCESS_PASS = "nikki2026";
+
+// ── QQ 群号（改这里） ──
+var QQ_GROUP = "778585992";
+
+function init(){
+  document.getElementById('qqNum').textContent = QQ_GROUP;
+  document.getElementById('qqNum2').textContent = QQ_GROUP;
+  document.getElementById('pwd').addEventListener('keydown',function(e){ if(e.key==='Enter') checkPwd(); });
+}
+function checkPwd(){
+  var v = document.getElementById('pwd').value.trim();
+  if(v === ACCESS_PASS){
+    document.getElementById('verifyBox').classList.add('hidden');
+    document.getElementById('dlBox').classList.remove('hidden');
+    document.getElementById('err').textContent = '';
+    try{ localStorage.setItem('nikki_unlocked','1'); }catch(e){}
+  } else {
+    document.getElementById('err').textContent = '密码错误。加入 QQ 群免费获取密码。';
+  }
+}
+function copyQQ(){
+  var t = QQ_GROUP;
+  try{
+    navigator.clipboard.writeText(t);
+    alert('QQ群号已复制: ' + t);
+  }catch(e){ prompt('QQ群号：', t); }
+}
+function downloadPkg(){
+  alert('请替换为你的部署包下载链接（GitHub Release 或网盘）');
+}
+init();
+</script>
+</body>
+</html>

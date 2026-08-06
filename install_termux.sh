@@ -1,84 +1,115 @@
-#!/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
+# ═══════════════════════════════════════════════════════════════════
+#  💖 羽蝉NIKKI一键化酒馆部署 💖 (Termux 版 v2.0)
+#  开源程序 · 仅供学习交流使用 · 完全免费
+#  如果收费，恭喜你被骗了。请联络 QQ 群获取正确渠道。
+# ═══════════════════════════════════════════════════════════════════
 
-# 💖 羽蝉NIKKI一键化酒馆部署 💖
-#
-# 嗨，小仙女！这是你的专属酒馆一键部署脚本哦~
-#
-# 使用方法:
-# 1. 把这个文件下载到手机里，放到 Termux 能找到的地方。
-# 2. 在 Termux 里念出咒语: `chmod +x install_sillytavern_cn.sh` (给脚本一点魔法权限)
-# 3. 然后再次念出咒语: `./install_sillytavern_cn.sh` 就可以开始啦！
+set -e
+PINK='\033[1;35m'; CYAN='\033[1;36m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RED='\033[0;31m'; NC='\033[0m'
 
-# 定义一些可爱的颜色~
-PINK='\033[1;35m'
-CYAN='\033[1;36m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # 恢复默认
+# ── 常量 ──
+ST_URL="https://github.com/SillyTavern/SillyTavern.git"
+ST_BRANCH="release"
+ST_DIR="$HOME/SillyTavern"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+QQ_GROUP="778585992"
 
-echo -e "${PINK}✨✨ 欢迎使用 羽蝉NIKKI一键化酒馆部署 ✨✨${NC}"
-echo -e "${CYAN}马上就要开始咯~ 请姐妹们检查一下网络是否在线哦！(o´ω`o)ﾉ${NC}"
-echo ""
+banner() {
+  echo ""
+  echo -e "${PINK}  ╔══════════════════════════════════════════════════╗${NC}"
+  echo -e "${PINK}  ║    ✨ 羽蝉NIKKI一键化酒馆部署 ✨ (Termux)      ║${NC}"
+  echo -e "${PINK}  ╠══════════════════════════════════════════════════╣${NC}"
+  echo -e "${PINK}  ║  开源程序 · 仅供学习交流使用 · 完全免费          ║${NC}"
+  echo -e "${PINK}  ║  如果收费，恭喜你被骗了。                        ║${NC}"
+  echo -e "${PINK}  ║  QQ 群 ${QQ_GROUP} 获取正确渠道                  ║${NC}"
+  echo -e "${PINK}  ╚══════════════════════════════════════════════════╝${NC}"
+  echo ""
+}
 
-# 步骤 1: 更新软件包
-echo -e "${PINK}🌸 Step 1/5: 更新一下软件包，让环境变得焕然一新~${NC}"
-pkg update -y && pkg upgrade -y
-if [ $? -ne 0 ]; then
-    echo -e "${YELLOW}哎呀，更新失败了呢... 检查下网络再试试吧！${NC}"
+check_termux() {
+  if [ ! -d "/data/data/com.termux" ]; then
+    echo -e "${RED}[!] 此脚本仅支持 Termux 环境（Android 手机）${NC}"
+    echo -e "${YELLOW}请先安装 Termux: https://f-droid.org/repo/com.termux.apk${NC}"
+    echo -e "${YELLOW}不要用 Play 商店旧版哦，会跑不起来的~${NC}"
     exit 1
-fi
-echo ""
+  fi
+}
 
-# 步骤 2: 安装必备小工具
-echo -e "${PINK}🌸 Step 2/5: 安装一些必备的小工具，马上就好啦！${NC}"
-pkg install git nodejs esbuild -y
-if [ $? -ne 0 ]; then
-    echo -e "${YELLOW}呜，安装失败了... 可能是网络有点小情绪了。${NC}"
-    exit 1
-fi
-echo ""
+install_deps() {
+  echo -e "${CYAN}🌸 Step 1/5: 更新软件包 + 安装小工具~${NC}"
+  pkg update -y
+  pkg install -y git nodejs-lts nano curl
+  echo -e "${GREEN}    小工具准备好咯！${NC}"
+}
 
-# 步骤 3: 召唤酒馆本体
-echo -e "${PINK}🌸 Step 3/5: 从魔法世界把酒馆本体召唤过来... (git clone)${NC}"
-if [ -d "SillyTavern" ]; then
-    echo -e "${YELLOW}发现酒馆已经在了耶，那我们直接跳到下一步哦~${NC}"
-else
-    git clone https://github.com/SillyTavern/SillyTavern
-    if [ $? -ne 0 ]; then
-        echo -e "${YELLOW}召唤失败！是网络波动了吗？再试一次吧！${NC}"
-        exit 1
+install_tavern() {
+  if [ -d "$ST_DIR/.git" ]; then
+    echo -e "${CYAN}🌸 Step 2/5: 发现酒馆已经在了，拉取最新更新~${NC}"
+    cd "$ST_DIR"
+    git pull origin "$ST_BRANCH"
+  else
+    echo -e "${CYAN}🌸 Step 2/5: 从魔法世界召唤酒馆 (release 版)...${NC}"
+    git clone -b "$ST_BRANCH" "$ST_URL" "$ST_DIR"
+    cd "$ST_DIR"
+  fi
+  echo -e "${GREEN}    酒馆就位！${NC}"
+}
+
+install_plugins() {
+  echo -e "${CYAN}🌸 Step 3/5: 预置热门插件配置...${NC}"
+  mkdir -p "$ST_DIR/plugins"
+  echo "    插件将在首次启动后通过酒馆『扩展→插件市场』安装"
+  echo "    推荐插件清单见项目 plugins/README.md"
+  echo -e "${GREEN}    插件配置就绪！${NC}"
+}
+
+apply_patch() {
+  echo -e "${CYAN}🌸 Step 4/5: 应用定制标记（水印）...${NC}"
+  INJECT_JS="$SCRIPT_DIR/patch/mark-inject.js"
+  if [ -f "$INJECT_JS" ]; then
+    if ! grep -q "NIKKI_BADGE" "$ST_DIR/public/index.html" 2>/dev/null; then
+      node "$INJECT_JS" --target="$ST_DIR/public/index.html" && \
+        echo -e "${GREEN}    定制标记完成${NC}" || \
+        echo -e "${YELLOW}    标记注入失败（可手动执行 mark-inject.js）${NC}"
+    else
+      echo -e "${GREEN}    定制标记已存在，跳过${NC}"
     fi
-fi
-echo ""
+  else
+    echo -e "${YELLOW}    mark-inject.js 缺失，跳过水印${NC}"
+  fi
+}
 
-# 步骤 4: 走进酒馆开始装修
-echo -e "${PINK}🌸 Step 4/5: 走进酒馆，准备开始装修啦~ (安装依赖)${NC}"
-cd SillyTavern
-if [ $? -ne 0 ]; then
-    echo -e "${YELLOW}找不到酒馆的门了... 脚本出了一点小问题。${NC}"
-    exit 1
-fi
+setup_node_modules() {
+  echo -e "${CYAN}🌸 Step 5/5: 摆放家具 (npm install)...${NC}"
+  cd "$ST_DIR"
+  if [ ! -d "node_modules" ]; then
+    npm install --no-audit --no-fund
+  fi
+  echo -e "${GREEN}    家具摆好啦！${NC}"
+}
 
-# 步骤 5: 完成装修
-echo -e "${PINK}🌸 Step 5/5: 最后一步，把家具都摆放好！(npm install)${NC}"
-npm install
-if [ $? -ne 0 ]; then
-    echo -e "${YELLOW}装修出错了... 哭哭 T_T 试试手动进入 SillyTavern 目录，然后运行 'npm install' 看看？${NC}"
-    exit 1
-fi
-echo ""
+finish() {
+  echo ""
+  echo -e "${PINK}════════════════════════════════════════════════════${NC}"
+  echo -e "${PINK}  🎉 恭喜小仙女！羽蝉NIKKI酒馆部署完成！ 🎉${NC}"
+  echo -e "${PINK}════════════════════════════════════════════════════${NC}"
+  echo ""
+  echo -e "${CYAN}  启动咒语:${NC}"
+  echo -e "    cd ~/SillyTavern && bash start.sh"
+  echo -e "${CYAN}  秘密地址:${NC}"
+  echo -e "    http://127.0.0.1:8000"
+  echo -e "${YELLOW}  开源程序 · 仅供学习交流 · 完全免费${NC}"
+  echo -e "${YELLOW}  如果收费，恭喜你被骗了。QQ 群 ${QQ_GROUP} 获取正确渠道。${NC}"
+  echo ""
+}
 
-# 完成啦！
-echo -e "${PINK}===================================================${NC}"
-echo -e "${PINK}🎉 恭喜小仙女！羽蝉NIKKI酒馆部署完成啦！ 🎉${NC}"
-echo -e "${PINK}===================================================${NC}"
-echo ""
-echo -e "${CYAN}现在可以开始你的奇妙之旅咯~ (ﾉ>ω<)ﾉ${NC}"
-echo -e "启动酒馆的咒语是:"
-echo ""
-echo -e "  ${GREEN}cd SillyTavern${NC}"
-echo -e "  ${GREEN}./start.sh${NC}"
-echo ""
-echo -e "启动后，在浏览器里输入这个秘密地址就可以见到它啦: ${YELLOW}http://127.0.0.1:8000${NC}"
-echo ""
-echo -e "${CYAN}玩得开心哦~ 比心！💖${NC}"
+# ── 执行 ──
+banner
+check_termux
+install_deps
+install_tavern
+install_plugins
+apply_patch
+setup_node_modules
+finish
