@@ -47,31 +47,40 @@
 
 ### 📱 第二步：部署酒馆
 
-1.  **下载项目**：打开 Termux，复制粘贴下面的咒语，然后按回车：
+1.  **先装 git**（新装 Termux 还没有它，先装一次就行）：
+    ```bash
+    pkg install -y git
+    ```
+2.  **下载项目**：打开 Termux，复制粘贴下面的咒语，然后按回车：
     ```bash
     git clone https://github.com/mosaicbear/Nikki-SillyTavern-Termux.git
     ```
-2.  **进入项目文件夹**：
+3.  **进入项目文件夹**：
     ```bash
     cd Nikki-SillyTavern-Termux
     ```
-3.  **运行安装脚本**：
+4.  **运行安装脚本**：
     ```bash
     chmod +x install_termux.sh && ./install_termux.sh
     ```
-4.  脚本会弹出菜单，选 `1` 或 `2` 开始安装，等它跑完就行。
+5.  脚本会弹出菜单，选 `1` 或 `2` 开始安装，等它跑完就行。
 
 ### ☁️ 阿里云 / Linux服务器 (免魔法)
 
-1.  **下载项目**：
+1.  **先装 git**（没有就装）：
+    ```bash
+    sudo apt-get install -y git    # Debian/Ubuntu
+    # 或 CentOS：sudo yum install -y git
+    ```
+2.  **下载项目**：
     ```bash
     git clone https://github.com/mosaicbear/Nikki-SillyTavern-Termux.git
     ```
-2.  **进入项目文件夹**：
+3.  **进入项目文件夹**：
     ```bash
     cd Nikki-SillyTavern-Termux
     ```
-3.  **运行安装脚本**：
+4.  **运行安装脚本**：
     ```bash
     chmod +x install_aliyun.sh && ./install_aliyun.sh
     ```
