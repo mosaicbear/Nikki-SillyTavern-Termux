@@ -23,18 +23,27 @@
 
 ## 🚀 如何安装 (第一次使用)
 
-### 📱 第一步：安装 Termux
+### 📱 第一步：安装 Termux（必装，30秒搞定）
 
-**安卓手机必须先装 Termux**（没有它酒馆跑不起来）：
+**安卓手机必须先装 Termux**（没有它酒馆跑不起来），任选一个方法：
 
-*   **方法1（国内推荐，免魔法）**：
-    1. 用浏览器打开清华镜像下载 F-Droid 客户端：
-       `https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/`
-    2. 安装 F-Droid，打开后：设置 → 存储库 → 添加清华镜像源
-    3. 搜索 **Termux** → 安装
-*   **方法2（国外）**：直接下载 `https://f-droid.org/repo/com.termux.apk`
+**方法1（度盘直下，国内最快）**：手机浏览器打开度盘链接下载 Termux 安装包：
+```text
+链接：https://pan.baidu.com/s/1kTzCuyEMkPd5qFR1RUfDtw?pwd=xyxy
+提取码：xyxy
+```
+下载完点开安装即可（安卓会提示"允许安装未知来源应用"，点允许就行）。
 
-> ⚠️ **注意**：不要用 Google Play 商店的旧版 Termux（会跑不起来），一定用 F-Droid 的。
+**方法2（官方直装，备选）**：度盘打不开就用官方下载页：
+`https://f-droid.org/zh_Hans/packages/com.termux/`
+往下拉到「版本」列表，点最新版旁边的 **Download APK** 下载安装。不用装 F-Droid 客户端。
+
+**方法3（GitHub，最后备选）**：
+`https://github.com/termux/termux-app/releases`
+找 `termux-app_v0.118.x+apt-android-7-github-debug_universal.apk` 这个文件下载安装。
+
+> ⚠️ **注意**：千万别用 Google Play 商店的旧版 Termux（跑不起来）！
+> 装好后打开 Termux 输入 `pkg --version` 能出结果，就是装好了~
 
 ### 📱 第二步：部署酒馆
 
