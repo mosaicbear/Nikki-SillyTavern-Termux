@@ -116,17 +116,22 @@ setup_pkg_source() {
 # ── 双源 git clone（先国内后国外自动切换）──
 clone_repo() {
   local name="$1" cn_url="$2" foreign_url="$3" dest="$4"
+  # 清理残留目录：目标已存在但不是 git 仓库时，git clone 会失败
+  if [ -d "$dest" ] && [ ! -d "$dest/.git" ]; then
+    echo -e "${YELLOW}[*] 检测到残留目录，自动清理后重试...${NC}"
+    rm -rf "$dest"
+  fi
   echo -e "${CYAN}[*] 拉取 ${name}...${NC}"
-  if git clone --depth 1 "$cn_url" "$dest" 2>/dev/null; then
+  if git clone --depth 1 "$cn_url" "$dest"; then
     echo -e "${GREEN}    使用国内源 (Gitee) 成功${NC}"
     return 0
   fi
   echo -e "${YELLOW}[*] 国内源失败，切换国外源 (GitHub)...${NC}"
-  if git clone --depth 1 "$foreign_url" "$dest" 2>/dev/null; then
+  if git clone --depth 1 "$foreign_url" "$dest"; then
     echo -e "${GREEN}    使用国外源 (GitHub) 成功${NC}"
     return 0
   fi
-  echo -e "${RED}[!] 两个源都失败了，请检查网络后再试${NC}"
+  echo -e "${RED}[!] 两个源都失败了，请把上面的报错发到 QQ 群求助${NC}"
   return 1
 }
 
