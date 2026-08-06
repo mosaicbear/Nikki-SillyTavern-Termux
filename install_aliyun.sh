@@ -47,15 +47,19 @@ if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
 fi
 echo ""
 
-# 召唤酒馆本体 (使用国内镜像加速)
+# 召唤酒馆本体 (使用原作者国内镜像加速)
 echo -e "${PINK}🌸 Step 3/5: 从魔法世界把酒馆本体召唤过来... (使用Gitee镜像加速)${NC}"
 if [ -d "SillyTavern" ]; then
     echo -e "${YELLOW}发现酒馆已经在了耶，那我们直接跳到下一步哦~${NC}"
 else
-    git clone https://gitee.com/Cohee1207/SillyTavern.git
+    git clone https://gitee.com/mirrors/sillytavern.git
     if [ $? -ne 0 ]; then
-        echo -e "${YELLOW}召唤失败！是网络波动了吗？再试一次吧！${NC}"
-        exit 1
+        echo -e "${YELLOW}召唤失败！改用GitHub官方源再试一次！${NC}"
+        git clone https://github.com/SillyTavern/SillyTavern.git
+        if [ $? -ne 0 ]; then
+            echo -e "${YELLOW}召唤失败！是网络波动了吗？再试一次吧！${NC}"
+            exit 1
+        fi
     fi
 fi
 echo ""

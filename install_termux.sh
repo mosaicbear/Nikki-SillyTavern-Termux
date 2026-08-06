@@ -16,16 +16,16 @@ ST_DIR="$HOME/SillyTavern"                            # 酒馆安装目录
 EXT_DIR="$ST_DIR/public/scripts/extensions/third-party" # 插件全局目录
 QQ_GROUP="778585992"
 
-# ── 双源配置（国内 Gitee 优先，国外 GitHub 兜底）──
-# 酒馆本体
-ST_GITEE="https://gitee.com/mosaicb/silly-tavern.git"
+# ── 双源配置（原作者官方源：国内 Gitee/GitLab 优先，国外 GitHub 兜底）──
+# 酒馆本体（官方：Gitee 极速下载镜像 / GitHub 官方）
+ST_GITEE="https://gitee.com/mirrors/sillytavern.git"
 ST_GITHUB="https://github.com/SillyTavern/SillyTavern.git"
-# 酒馆助手
-HELPER_GITEE="https://gitee.com/mosaicb/js-slash-runner.git"
+# 酒馆助手（作者官方：GitLab / GitHub）
+HELPER_GITEE="https://gitlab.com/novi028/JS-Slash-Runner.git"
 HELPER_GITHUB="https://github.com/N0VI028/JS-Slash-Runner.git"
-# 记忆插件
-MEMORY_GITEE="https://gitee.com/mosaicb/st-memory-context.git"
-MEMORY_GITHUB="https://github.com/gaigai315/ST-Memory-Context.git"
+# 记忆插件 yuzuki-Memory（作者官方：Gitee / GitHub）
+MEMORY_GITEE="https://gitee.com/gaigai315/yuzuki-Memory.git"
+MEMORY_GITHUB="https://github.com/gaigai315/yuzuki-Memory.git"
 # npm 源
 NPM_CN="https://registry.npmmirror.com"
 NPM_FOREIGN="https://registry.npmjs.org"
@@ -52,7 +52,7 @@ show_menu() {
   echo -e "  ${GREEN}[1]${NC} 安装酒馆纯净版 v${ST_VERSION}"
   echo -e "  ${GREEN}[2]${NC} 一键安装（酒馆 + 酒馆助手）"
   echo -e "  ${GREEN}[3]${NC} 单独安装酒馆助手"
-  echo -e "  ${GREEN}[4]${NC} 安装记忆插件 ST-Memory-Context"
+  echo -e "  ${GREEN}[4]${NC} 安装记忆插件 yuzuki-Memory"
   echo -e "  ${GREEN}[5]${NC} 退出"
   echo ""
   echo -e "${YELLOW}  遇到问题？加 QQ 群 ${QQ_GROUP} 求助~${NC}"
@@ -171,7 +171,7 @@ install_helper() {
 
 # ── 安装记忆插件 ──
 install_memory() {
-  local dest="$EXT_DIR/ST-Memory-Context"
+  local dest="$EXT_DIR/yuzuki-Memory"
   if [ ! -d "$ST_DIR" ]; then
     echo -e "${RED}[!] 未检测到酒馆，请先执行选项 [1] 或 [2]${NC}"
     return 1
@@ -181,11 +181,11 @@ install_memory() {
     cd "$dest" && git pull 2>/dev/null || true
     return 0
   fi
-  echo -e "${CYAN}[*] 安装记忆插件 ST-Memory-Context...${NC}"
+  echo -e "${CYAN}[*] 安装记忆插件 yuzuki-Memory...${NC}"
   mkdir -p "$EXT_DIR"
   if clone_repo "记忆插件" "$MEMORY_GITEE" "$MEMORY_GITHUB" "$dest"; then
     echo -e "${GREEN}    记忆插件安装完成${NC}"
-    echo -e "${YELLOW}    ⚠ 首次使用请到酒馆【扩展】面板勾选启用「Memory-Context」${NC}"
+    echo -e "${YELLOW}    ⚠ 首次使用请到酒馆【扩展】面板勾选启用「yuzuki-Memory」${NC}"
   fi
 }
 

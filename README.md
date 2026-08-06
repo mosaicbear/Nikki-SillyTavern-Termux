@@ -10,9 +10,9 @@
 ## ✨ 版本选择
 
 *   **`install_termux.sh` -> 📱 安卓Termux版 (v3.0)**
-    *   **无需魔法上网**：内置 Gitee 国内镜像，自动切换双源。
+    *   **无需魔法上网**：内置原作者官方国内源（Gitee/GitLab），自动切换双源。
     *   锁定的稳定版本：SillyTavern **v1.18.0**。
-    *   可选插件：酒馆助手 (Tavern Helper) + 记忆插件 (ST-Memory-Context)。
+    *   可选插件：酒馆助手 (Tavern Helper) + 记忆插件 (yuzuki-Memory)。
     *   适合想在手机上随时随地玩耍的小仙女。
 
 *   **`install_aliyun.sh` -> ☁️ 阿里云/Linux通用版**
@@ -77,30 +77,30 @@
   [1] 安装酒馆纯净版 v1.18.0
   [2] 一键安装（酒馆 + 酒馆助手）
   [3] 单独安装酒馆助手
-  [4] 安装记忆插件 ST-Memory-Context
+  [4] 安装记忆插件 yuzuki-Memory
   [5] 退出
 ```
 
 *   **选项1**：只装酒馆本体（纯净版 v1.18.0）
 *   **选项2**：酒馆 + 酒馆助手一起装（推荐新手）
 *   **选项3**：已有酒馆，单独补装酒馆助手
-*   **选项4**：已有酒馆，单独安装记忆插件（自动记忆表格 + 隐藏楼层省 Token）
+*   **选项4**：已有酒馆，单独安装记忆插件 yuzuki-Memory（自动记忆表格 + 隐藏楼层省 Token）
 
 > 装完插件后，**打开酒馆 → 扩展 → 勾选启用**对应插件才能生效哦！
 
 ## 🌐 双源说明
 
-脚本所有下载都内置了**国内 + 国外双源**，自动切换：
+脚本所有下载都内置了**国内 + 国外双源**，全部为**原作者官方源**，自动切换：
 
 | 下载项 | 国内源（优先） | 国外源（兜底） |
 |--------|--------------|--------------|
-| 酒馆本体 | Gitee 镜像 | GitHub 官方 |
-| 酒馆助手 | Gitee 镜像 | GitHub 官方 |
-| 记忆插件 | Gitee 镜像 | GitHub 官方 |
+| 酒馆本体 | Gitee 极速下载镜像 `gitee.com/mirrors/sillytavern` | GitHub 官方 `SillyTavern/SillyTavern` |
+| 酒馆助手 | GitLab 官方 `gitlab.com/novi028/JS-Slash-Runner` | GitHub 官方 `N0VI028/JS-Slash-Runner` |
+| 记忆插件 yuzuki-Memory | Gitee 官方 `gitee.com/gaigai315/yuzuki-Memory` | GitHub 官方 `gaigai315/yuzuki-Memory` |
 | npm 依赖 | npmmirror | npm 官方 |
 | Termux 软件源 | 清华镜像 | 官方源 |
 
-国内网络优先走 Gitee，失败自动切 GitHub，全程不用你操心。
+国内网络优先走 Gitee/GitLab，失败自动切 GitHub，全程不用你操心。
 
 ## 💖 如何启动 / 再次启动酒馆 (日常使用)
 
