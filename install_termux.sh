@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # ═══════════════════════════════════════════════════════════════════
-#  💖 羽蝉NIKKI一键化酒馆部署 💖 (Termux 版 v3.4 · 全自动一条龙)
+#  💖 羽蝉NIKKI一键化酒馆部署 💖 (Termux 版 v3.5 · 全自动一条龙)
 #  开源程序 · 仅供学习交流使用 · 完全免费
 #  如果收费，恭喜你被骗了。请联络 QQ 群获取正确渠道。
 #  QQ群：778585992
@@ -129,8 +129,9 @@ clone_repo() {
   # Termux 包版本不一致（CANNOT LINK）→ 自动 pkg upgrade 修复后重试
   if grep -q "CANNOT LINK" "$log" 2>/dev/null; then
     echo -e "${YELLOW}[*] 检测到 Termux 依赖库版本不一致（CANNOT LINK），自动修复中...${NC}"
-    echo -e "${CYAN}[*] 正在 pkg upgrade（首次会比较久，请耐心等待）...${NC}"
-    pkg upgrade -y >/dev/null 2>&1 || true
+    echo -e "${CYAN}[*] 正在 apt full-upgrade（首次会比较久，请耐心等待）...${NC}"
+    # 用 apt 而非 pkg：pkg 内部依赖 curl，curl 挂了 pkg 也跑不动；apt 走 libapt 不依赖 curl
+    apt update >/dev/null 2>&1 && apt full-upgrade -y >/dev/null 2>&1 || true
     echo -e "${CYAN}[*] 修复完成，重试拉取 ${name}...${NC}"
     git clone --depth 1 "$cn_url" "$dest" 2>&1 | tee "$log"
     ret=${PIPESTATUS[0]}
