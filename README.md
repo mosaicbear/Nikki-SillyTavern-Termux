@@ -11,7 +11,7 @@
 
 ## ✨ 版本选择
 
-*   **`install_termux.sh` -> 📱 安卓Termux版 (v3.1 全自动)**
+*   **`install_termux.sh` -> 📱 安卓Termux版 (v3.2 全自动)**
     *   **无需魔法上网**：内置原作者官方国内源（Gitee/GitLab），自动切换双源。
     *   **一条命令全自动**：自动装依赖 → 装酒馆 → 引导装插件，全程不用管。
     *   锁定的稳定版本：SillyTavern **v1.18.0**。
@@ -52,7 +52,13 @@ curl -fsSL https://raw.githubusercontent.com/mosaicbear/Nikki-SillyTavern-Termux
 脚本会自动完成：
 1. 自动换国内源 + 装依赖（git / node / curl）
 2. 自动下载酒馆本体 v1.18.0（国内源优先，失败自动切国外）
-3. 装完会问你：要不要顺便装「酒馆助手」或「记忆插件」？选 1 / 2 装，选 3 结束
+
+> 💡 **想装插件？** 上面的命令装完会自动跳过插件选择（管道安装没法交互）。
+> 想手动选插件，把 `| bash` 换成下面这种写法（保留交互）：
+> ```bash
+> bash -c "$(curl -fsSL https://gitee.com/mosaicb/Nikki-SillyTavern-Termux/raw/main/install_termux.sh)"
+> ```
+> 装完会问你要不要装「酒馆助手」或「记忆插件」，选 1 / 2 装，选 3 结束。
 
 > 装完后启动酒馆：`cd ~/SillyTavern && ./start.sh`，浏览器打开 `http://127.0.0.1:8000`
 

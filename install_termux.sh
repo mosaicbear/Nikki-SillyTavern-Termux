@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # ═══════════════════════════════════════════════════════════════════
-#  💖 羽蝉NIKKI一键化酒馆部署 💖 (Termux 版 v3.1 · 全自动一条龙)
+#  💖 羽蝉NIKKI一键化酒馆部署 💖 (Termux 版 v3.2 · 全自动一条龙)
 #  开源程序 · 仅供学习交流使用 · 完全免费
 #  如果收费，恭喜你被骗了。请联络 QQ 群获取正确渠道。
 #  QQ群：778585992
@@ -67,12 +67,26 @@ check_termux() {
 # ── 配置 Termux pkg 国内源（国内优先，双向兜底）──
 setup_pkg_source() {
   echo -e "${CYAN}[*] 检查 Termux 软件源（国内优先）...${NC}"
+  # 新版 Termux(0.118+) 源在 sources.list.d/termux-main.list，旧版在 sources.list
+  local src_file=""
+  if [ -f "$PREFIX/etc/apt/sources.list.d/termux-main.list" ]; then
+    src_file="$PREFIX/etc/apt/sources.list.d/termux-main.list"
+  elif [ -f "$PREFIX/etc/apt/sources.list" ]; then
+    src_file="$PREFIX/etc/apt/sources.list"
+  else
+    mkdir -p "$PREFIX/etc/apt"
+    src_file="$PREFIX/etc/apt/sources.list"
+  fi
   # 快速测清华镜像源是否可达（3秒超时）
   if curl -s --max-time 3 -o /dev/null "$PKG_CN/dists/stable/InRelease" 2>/dev/null; then
-    if grep -q "mirrors.tuna.tsinghua.edu.cn" "$PREFIX/etc/apt/sources.list" 2>/dev/null; then
+    if grep -q "mirrors.tuna.tsinghua.edu.cn" "$src_file" 2>/dev/null; then
       echo -e "${GREEN}    已使用国内源（清华镜像）${NC}"
     else
-      sed -i 's@^\(deb.*stable main\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main stable main@' "$PREFIX/etc/apt/sources.list" 2>/dev/null || true
+      sed -i 's@^\(deb.*stable main\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main stable main@' "$src_file" 2>/dev/null || true
+      # 若文件里没有可替换的 deb 行，直接追加清华源
+      if ! grep -q "mirrors.tuna.tsinghua.edu.cn" "$src_file" 2>/dev/null; then
+        echo "deb https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main stable main" >> "$src_file"
+      fi
       echo -e "${GREEN}    已切换为国内源（清华镜像）${NC}"
     fi
   else
@@ -140,7 +154,11 @@ install_tavern() {
     if [ "$cur_ver" != "$ST_VERSION" ]; then
       echo -e "${YELLOW}[*] 非目标版本，自动切换至 v${ST_VERSION}...${NC}"
       git fetch --depth 1 origin "refs/tags/$ST_VERSION:refs/tags/$ST_VERSION" 2>&1 || git fetch origin 2>&1
-      git checkout "$ST_VERSION" 2>&1 && echo -e "${GREEN}    已切换至 v${ST_VERSION}${NC}" || echo -e "${RED}    版本切换失败${NC}"
+      if ! git checkout "$ST_VERSION" 2>&1; then
+        echo -e "${RED}❌ 版本切换失败：无法切到 v${ST_VERSION}${NC}"
+        return 1
+      fi
+      echo -e "${GREEN}    已切换至 v${ST_VERSION}${NC}"
     fi
     return 0
   fi
@@ -150,7 +168,11 @@ install_tavern() {
     return 1
   fi
   cd "$ST_DIR"
-  git checkout "$ST_VERSION" 2>&1 && echo -e "${GREEN}    已锁定 v${ST_VERSION}${NC}" || echo -e "${YELLOW}    版本锁定失败，将使用默认分支${NC}"
+  if ! git checkout "$ST_VERSION" 2>&1; then
+    echo -e "${RED}❌ 版本锁定失败：无法切到 v${ST_VERSION}${NC}"
+    return 1
+  fi
+  echo -e "${GREEN}    已锁定 v${ST_VERSION}${NC}"
   return 0
 }
 
@@ -234,6 +256,15 @@ plugin_guide() {
   echo -e "${GREEN}════════════════════════════════════════════════════${NC}"
   echo -e "${GREEN}  🎉 酒馆本体安装完成！${NC}"
   echo -e "${GREEN}════════════════════════════════════════════════════${NC}"
+
+  # curl | bash 管道模式下 stdin 不是终端，无法交互，自动跳过并提示
+  if [ ! -t 0 ]; then
+    echo ""
+    echo -e "${YELLOW}  [管道安装] 跳过插件选择，酒馆本体已可正常使用${NC}"
+    echo -e "${YELLOW}  想装插件？重跑脚本选「bash -c\"\$(curl ...)\"」方式即可交互选择${NC}"
+    return 0
+  fi
+
   echo ""
   echo -e "${CYAN}  要顺便装点好用的插件吗？${NC}"
   echo -e "  ${GREEN}[1]${NC} 安装酒馆助手 (Tavern Helper)"
@@ -241,8 +272,8 @@ plugin_guide() {
   echo -e "  ${GREEN}[3]${NC} 不装了，直接结束"
   echo ""
   echo -n "  请输入选项 [1-3]: "
-  read -r choice
-  case "$choice" in
+  read -r choice || choice=""
+  case "${choice:-}" in
     1)
       install_helper
       plugin_guide
