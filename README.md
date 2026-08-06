@@ -1,5 +1,7 @@
 # 💖 羽蝉NIKKI一键化酒馆部署 💖
 
+**🌐 语言 / Language: 中文 | [English](README.en.md)**
+
 嗨，各位小仙女！(o´ω`o)ﾉ 欢迎来到羽蝉NIKKI的专属酒馆部署项目！
 
 这是一个为安卓手机设计的，超级简单、超级可爱的一键化SillyTavern（酒馆）安装脚本合集。让你在自己的手机上轻松拥有专属的AI聊天伴侣！
@@ -156,6 +158,7 @@ rm -rf ~/SillyTavern
 | `patch/mark-inject.js` | 可选小工具：给酒馆页面加"开源免费·被骗加群"水印标注（想自己分享给朋友时用，跑 `node patch/mark-inject.js` 即可） |
 | `FAQ-用户版.md` | 常见问题答疑（软糯版，装不上/报错/想卸载都能查） |
 | `FAQ-团队版.md` | 团队维护手册（内部：版本演进 + 踩坑根因 + 发布流程） |
+| `README.en.md` | English version of this README (via the language switcher at the top) |
 
 ---
 
