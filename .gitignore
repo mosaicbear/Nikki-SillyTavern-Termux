@@ -1,0 +1,12 @@
+# 部署产物（不要提交）
+SillyTavern/
+node_modules/
+*.log
+
+# 环境
+.env
+api-keys.json
+
+# 系统
+.DS_Store
+Thumbs.db
