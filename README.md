@@ -2,7 +2,7 @@
 
 嗨，各位小仙女！(o´ω`o)ﾉ 欢迎来到羽蝉NIKKI的专属酒馆部署项目！
 
-这是一个为安卓手机Termux和Linux服务器（如阿里云）设计的，超级简单、超级可爱的一键化SillyTavern（酒馆）安装脚本合集。让你在手机或服务器上都能轻松拥有属于自己的AI聊天伴侣！
+这是一个为安卓手机设计的，超级简单、超级可爱的一键化SillyTavern（酒馆）安装脚本合集。让你在自己的手机上轻松拥有专属的AI聊天伴侣！
 
 > ⚠️ **开源程序 · 仅供学习交流使用 · 完全免费。**
 > **如果收费，恭喜你被骗了。请通过 QQ 群获取正确渠道。**
@@ -16,10 +16,6 @@
     *   锁定的稳定版本：SillyTavern **v1.18.0**。
     *   可选插件：酒馆助手 (Tavern Helper) + 记忆插件 (yuzuki-Memory)。
     *   适合想在手机上随时随地玩耍的小仙女。
-
-*   **`install_aliyun.sh` -> ☁️ 阿里云/Linux通用版**
-    *   **无需魔法上网**，脚本内置国内镜像加速，下载速度起飞！
-    *   适合拥有自己服务器，追求稳定和高性能的玩家。
 
 ## 🚀 如何安装 (第一次使用)
 
@@ -64,26 +60,6 @@
     chmod +x install_termux.sh && ./install_termux.sh
     ```
 5.  脚本会弹出菜单，选 `1` 或 `2` 开始安装，等它跑完就行。
-
-### ☁️ 阿里云 / Linux服务器 (免魔法)
-
-1.  **先装 git**（没有就装）：
-    ```bash
-    sudo apt-get install -y git    # Debian/Ubuntu
-    # 或 CentOS：sudo yum install -y git
-    ```
-2.  **下载项目**：
-    ```bash
-    git clone https://github.com/mosaicbear/Nikki-SillyTavern-Termux.git
-    ```
-3.  **进入项目文件夹**：
-    ```bash
-    cd Nikki-SillyTavern-Termux
-    ```
-4.  **运行安装脚本**：
-    ```bash
-    chmod +x install_aliyun.sh && ./install_aliyun.sh
-    ```
 
 ---
 
@@ -149,7 +125,6 @@
 | 文件 | 是干嘛的 |
 |------|---------|
 | `install_termux.sh` | 安卓 Termux 一键部署（酒馆 + 助手 + 记忆插件） |
-| `install_aliyun.sh` | 阿里云 / Linux 服务器部署 |
 | `start.sh` | 日常启动器（自动检测酒馆，没装会先问你要不要装） |
 | `plugins/README.md` | 酒馆推荐插件清单（TTS / 记忆 / 表情包等） |
 | `patch/mark-inject.js` | 可选小工具：给酒馆页面加"开源免费·被骗加群"水印标注（想自己分享给朋友时用，跑 `node patch/mark-inject.js` 即可） |
