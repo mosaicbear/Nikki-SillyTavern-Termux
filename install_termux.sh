@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # ═══════════════════════════════════════════════════════════════════
-#  💖 羽蝉NIKKI一键化酒馆部署 💖 (Termux 版 v3.5 · 全自动一条龙)
+#  💖 羽蝉NIKKI一键化酒馆部署 💖 (Termux 版 v3.6 · 全自动一条龙)
 #  开源程序 · 仅供学习交流使用 · 完全免费
 #  如果收费，恭喜你被骗了。请联络 QQ 群获取正确渠道。
 #  QQ群：778585992
@@ -112,7 +112,7 @@ need_cmd() {
 # ── 双源 git clone（先国内后国外自动切换，CANNOT LINK 自动修复）──
 clone_repo() {
   local name="$1" cn_url="$2" foreign_url="$3" dest="$4" log ret
-  log="/tmp/nikki_clone_$$.log"
+  log="$HOME/nikki_clone_$$.log"
   # 清理残留目录：目标已存在但不是 git 仓库时，git clone 会失败
   if [ -d "$dest" ] && [ ! -d "$dest/.git" ]; then
     echo -e "${YELLOW}[*] 检测到残留目录，自动清理后重试...${NC}"
@@ -191,6 +191,8 @@ install_tavern() {
     return 1
   fi
   cd "$ST_DIR"
+  # shallow clone 不带 tag，先浅拉目标 tag 再切换
+  git fetch --depth 1 origin "refs/tags/$ST_VERSION:refs/tags/$ST_VERSION" 2>&1 || true
   if ! git checkout "$ST_VERSION" 2>&1; then
     echo -e "${RED}❌ 版本锁定失败：无法切到 v${ST_VERSION}${NC}"
     return 1
