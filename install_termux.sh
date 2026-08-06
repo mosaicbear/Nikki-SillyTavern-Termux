@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # ═══════════════════════════════════════════════════════════════════
-#  💖 羽蝉NIKKI一键化酒馆部署 💖 (Termux 版 v3.3 · 全自动一条龙)
+#  💖 羽蝉NIKKI一键化酒馆部署 💖 (Termux 版 v3.4 · 全自动一条龙)
 #  开源程序 · 仅供学习交流使用 · 完全免费
 #  如果收费，恭喜你被骗了。请联络 QQ 群获取正确渠道。
 #  QQ群：778585992
@@ -109,25 +109,47 @@ need_cmd() {
   fi
 }
 
-# ── 双源 git clone（先国内后国外自动切换）──
+# ── 双源 git clone（先国内后国外自动切换，CANNOT LINK 自动修复）──
 clone_repo() {
-  local name="$1" cn_url="$2" foreign_url="$3" dest="$4"
+  local name="$1" cn_url="$2" foreign_url="$3" dest="$4" log ret
+  log="/tmp/nikki_clone_$$.log"
   # 清理残留目录：目标已存在但不是 git 仓库时，git clone 会失败
   if [ -d "$dest" ] && [ ! -d "$dest/.git" ]; then
     echo -e "${YELLOW}[*] 检测到残留目录，自动清理后重试...${NC}"
     rm -rf "$dest"
   fi
   echo -e "${CYAN}[*] 拉取 ${name}...${NC}"
-  if git clone --depth 1 "$cn_url" "$dest" 2>&1; then
+  git clone --depth 1 "$cn_url" "$dest" 2>&1 | tee "$log"
+  ret=${PIPESTATUS[0]}
+  if [ "$ret" -eq 0 ]; then
     echo -e "${GREEN}    使用国内源成功${NC}"
+    rm -f "$log"
     return 0
   fi
+  # Termux 包版本不一致（CANNOT LINK）→ 自动 pkg upgrade 修复后重试
+  if grep -q "CANNOT LINK" "$log" 2>/dev/null; then
+    echo -e "${YELLOW}[*] 检测到 Termux 依赖库版本不一致（CANNOT LINK），自动修复中...${NC}"
+    echo -e "${CYAN}[*] 正在 pkg upgrade（首次会比较久，请耐心等待）...${NC}"
+    pkg upgrade -y >/dev/null 2>&1 || true
+    echo -e "${CYAN}[*] 修复完成，重试拉取 ${name}...${NC}"
+    git clone --depth 1 "$cn_url" "$dest" 2>&1 | tee "$log"
+    ret=${PIPESTATUS[0]}
+    if [ "$ret" -eq 0 ]; then
+      echo -e "${GREEN}    修复后使用国内源成功${NC}"
+      rm -f "$log"
+      return 0
+    fi
+  fi
   echo -e "${YELLOW}[*] 国内源失败，自动切换国外源...${NC}"
-  if git clone --depth 1 "$foreign_url" "$dest" 2>&1; then
+  git clone --depth 1 "$foreign_url" "$dest" 2>&1 | tee "$log"
+  ret=${PIPESTATUS[0]}
+  if [ "$ret" -eq 0 ]; then
     echo -e "${GREEN}    使用国外源成功${NC}"
+    rm -f "$log"
     return 0
   fi
   echo -e "${RED}[!] 两个源都失败了（上面有报错信息）${NC}"
+  rm -f "$log"
   return 1
 }
 
