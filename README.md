@@ -43,9 +43,9 @@
 
 ### 📱 第二步：部署酒馆
 
-1.  **先装 git**（新装 Termux 还没有它，先装一次就行）：
+1.  **先换国内源 + 装 git**（新装 Termux 默认源在国外，可能报错/很慢，先换清华源，再装 git。一条命令搞定，复制粘贴按回车）：
     ```bash
-    pkg install -y git
+    echo 'deb https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main stable main' > $PREFIX/etc/apt/sources.list && pkg update && pkg install -y git
     ```
 2.  **下载项目**：打开 Termux，复制粘贴下面的咒语，然后按回车：
     ```bash
