@@ -84,13 +84,25 @@ need_cmd() {
   fi
 }
 
-# ── 配置 Termux pkg 国内源（检测失败则切换）──
+# ── 配置 Termux pkg 国内源（国内优先，双向兜底）──
 setup_pkg_source() {
-  echo -e "${CYAN}[*] 检查 Termux 软件源...${NC}"
-  # 快速测官方源是否可达（3秒超时）
-  if ! curl -s --max-time 3 -o /dev/null "$PKG_FOREIGN/dists/stable/InRelease" 2>/dev/null; then
-    echo -e "${YELLOW}[*] 官方源连接慢，切换清华镜像源...${NC}"
-    sed -i 's@^\(deb.*stable main\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main stable main@' "$PREFIX/etc/apt/sources.list" 2>/dev/null || true
+  echo -e "${CYAN}[*] 检查 Termux 软件源（国内优先）...${NC}"
+  # 快速测清华镜像源是否可达（3秒超时）
+  if curl -s --max-time 3 -o /dev/null "$PKG_CN/dists/stable/InRelease" 2>/dev/null; then
+    if grep -q "mirrors.tuna.tsinghua.edu.cn" "$PREFIX/etc/apt/sources.list" 2>/dev/null; then
+      echo -e "${GREEN}    已使用国内源（清华镜像）${NC}"
+    else
+      sed -i 's@^\(deb.*stable main\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main stable main@' "$PREFIX/etc/apt/sources.list" 2>/dev/null || true
+      echo -e "${GREEN}    已切换为国内源（清华镜像）${NC}"
+    fi
+  else
+    echo -e "${YELLOW}[*] 国内源不可用，保留官方源...${NC}"
+    if ! curl -s --max-time 3 -o /dev/null "$PKG_FOREIGN/dists/stable/InRelease" 2>/dev/null; then
+      echo -e "${RED}[!] 国内源和官方源都连不上${NC}"
+      echo -e "${YELLOW}    请自行挂梯子（魔法）重试，若仍失败请加 QQ 群 ${QQ_GROUP} 询问${NC}"
+    else
+      echo -e "${GREEN}    官方源可用${NC}"
+    fi
   fi
   echo -e "${GREEN}    软件源就绪${NC}"
 }
@@ -227,6 +239,9 @@ finish() {
 # ── 主流程 ──
 banner
 check_termux
+
+# 先配好软件源，再装依赖（保证 pkg install 时源可用）
+setup_pkg_source
 
 # 首次进入先确保基础命令存在
 need_cmd git
