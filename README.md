@@ -154,6 +154,20 @@ rm -rf ~/SillyTavern
 | `install_termux.sh` | 安卓 Termux 一键部署（全自动：依赖 + 酒馆本体 + 可选酒馆助手） |
 | `plugins/README.md` | 一键奶人包介绍（本体 + 酒馆助手） |
 | `patch/mark-inject.js` | 可选小工具：给酒馆页面加"开源免费·被骗加群"水印标注（想自己分享给朋友时用，跑 `node patch/mark-inject.js` 即可） |
+| `FAQ-用户版.md` | 常见问题答疑（软糯版，装不上/报错/想卸载都能查） |
+| `FAQ-团队版.md` | 团队维护手册（内部：版本演进 + 踩坑根因 + 发布流程） |
+
+---
+
+## 🕳️ 常见问题（先看这个再问我）
+
+**装得很慢？** 脚本会自动换清华源；手动换：`echo 'deb https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main stable main' > $PREFIX/etc/apt/sources.list && pkg update`
+
+**报 CANNOT LINK 报错？** 手机软件包版本对不上，跑：`apt update && apt full-upgrade -y`，再重跑部署
+
+**装完没弹酒馆助手菜单？** 管道安装没法交互，改用：`bash -c "$(curl -fsSL https://gitee.com/mosaicb/Nikki-SillyTavern-Termux/raw/main/install_termux.sh)"`，选 `1` 即可
+
+更多问题看 **`FAQ-用户版.md`**，或者来 QQ 群 **778585992** 找姐妹帮忙~
 
 ---
 
