@@ -11,8 +11,9 @@
 
 ## ✨ 版本选择
 
-*   **`install_termux.sh` -> 📱 安卓Termux版 (v3.0)**
+*   **`install_termux.sh` -> 📱 安卓Termux版 (v3.1 全自动)**
     *   **无需魔法上网**：内置原作者官方国内源（Gitee/GitLab），自动切换双源。
+    *   **一条命令全自动**：自动装依赖 → 装酒馆 → 引导装插件，全程不用管。
     *   锁定的稳定版本：SillyTavern **v1.18.0**。
     *   可选插件：酒馆助手 (Tavern Helper) + 记忆插件 (yuzuki-Memory)。
     *   适合想在手机上随时随地玩耍的小仙女。
@@ -23,66 +24,39 @@
 
 **安卓手机必须先装 Termux**（没有它酒馆跑不起来），任选一个方法：
 
-**方法1（度盘直下，国内最快）**：手机浏览器打开度盘链接下载 Termux 安装包：
-```text
-链接：https://pan.baidu.com/s/1kTzCuyEMkPd5qFR1RUfDtw?pwd=xyxy
-提取码：xyxy
-```
-下载完点开安装即可（安卓会提示"允许安装未知来源应用"，点允许就行）。
-
-**方法2（官方直装，备选）**：度盘打不开就用官方下载页：
+**方法1（官方直装，推荐）**：手机浏览器打开官方下载页：
 `https://f-droid.org/zh_Hans/packages/com.termux/`
 往下拉到「版本」列表，点最新版旁边的 **Download APK** 下载安装。不用装 F-Droid 客户端。
 
-**方法3（GitHub，最后备选）**：
+**方法2（GitHub，备选）**：
 `https://github.com/termux/termux-app/releases`
 找 `termux-app_v0.118.x+apt-android-7-github-debug_universal.apk` 这个文件下载安装。
 
 > ⚠️ **注意**：千万别用 Google Play 商店的旧版 Termux（跑不起来）！
 > 装好后打开 Termux 输入 `pkg --version` 能出结果，就是装好了~
 
-### 📱 第二步：部署酒馆
+### 📱 第二步：一键部署（一条命令全自动）
 
-1.  **先换国内源 + 装 git**（新装 Termux 默认源在国外，可能报错/很慢，先换清华源，再装 git。一条命令搞定，复制粘贴按回车）：
-    ```bash
-    echo 'deb https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main stable main' > $PREFIX/etc/apt/sources.list && pkg update && pkg install -y git
-    ```
-2.  **下载项目**：打开 Termux，复制粘贴下面的咒语，然后按回车：
-    ```bash
-    git clone https://github.com/mosaicbear/Nikki-SillyTavern-Termux.git
-    ```
-3.  **进入项目文件夹**：
-    ```bash
-    cd Nikki-SillyTavern-Termux
-    ```
-4.  **运行安装脚本**：
-    ```bash
-    chmod +x install_termux.sh && ./install_termux.sh
-    ```
-5.  脚本会弹出菜单，选 `1` 或 `2` 开始安装，等它跑完就行。
+打开 Termux，**根据你的网络情况选一条**，复制粘贴按回车，然后等它自己装完就行：
+
+**没魔法（国内网络）**：
+```bash
+curl -fsSL https://gitee.com/mosaicb/Nikki-SillyTavern-Termux/raw/main/install_termux.sh | bash
+```
+
+**有魔法（能翻墙）**：
+```bash
+curl -fsSL https://raw.githubusercontent.com/mosaicbear/Nikki-SillyTavern-Termux/main/install_termux.sh | bash
+```
+
+脚本会自动完成：
+1. 自动换国内源 + 装依赖（git / node / curl）
+2. 自动下载酒馆本体 v1.18.0（国内源优先，失败自动切国外）
+3. 装完会问你：要不要顺便装「酒馆助手」或「记忆插件」？选 1 / 2 装，选 3 结束
+
+> 装完后启动酒馆：`cd ~/SillyTavern && ./start.sh`，浏览器打开 `http://127.0.0.1:8000`
 
 ---
-
-## 🎮 安装脚本菜单
-
-运行 `install_termux.sh` 后，会出现这样的菜单：
-
-```
-  羽蝉NIKKI · 酒馆一键部署
-  ════════════════════════
-  [1] 安装酒馆纯净版 v1.18.0
-  [2] 一键安装（酒馆 + 酒馆助手）
-  [3] 单独安装酒馆助手
-  [4] 安装记忆插件 yuzuki-Memory
-  [5] 退出
-```
-
-*   **选项1**：只装酒馆本体（纯净版 v1.18.0）
-*   **选项2**：酒馆 + 酒馆助手一起装（推荐新手）
-*   **选项3**：已有酒馆，单独补装酒馆助手
-*   **选项4**：已有酒馆，单独安装记忆插件 yuzuki-Memory（自动记忆表格 + 隐藏楼层省 Token）
-
-> 装完插件后，**打开酒馆 → 扩展 → 勾选启用**对应插件才能生效哦！
 
 ## 🌐 双源说明
 
@@ -108,13 +82,13 @@
 ## 💖 如何启动 / 再次启动酒馆 (日常使用)
 
 1.  **打开Termux**。
-2.  **进入项目文件夹**：
+2.  **进入酒馆目录**：
     ```bash
-    cd Nikki-SillyTavern-Termux
+    cd ~/SillyTavern
     ```
-3.  **一键启动**（没装好酒馆的话它会先自动问你装不装）：
+3.  **启动酒馆**：
     ```bash
-    bash start.sh
+    ./start.sh
     ```
 4.  **开始玩耍**：手机浏览器访问 `http://127.0.0.1:8000`
 
@@ -124,8 +98,7 @@
 
 | 文件 | 是干嘛的 |
 |------|---------|
-| `install_termux.sh` | 安卓 Termux 一键部署（酒馆 + 助手 + 记忆插件） |
-| `start.sh` | 日常启动器（自动检测酒馆，没装会先问你要不要装） |
+| `install_termux.sh` | 安卓 Termux 一键部署（全自动：依赖 + 酒馆 + 引导插件） |
 | `plugins/README.md` | 酒馆推荐插件清单（TTS / 记忆 / 表情包等） |
 | `patch/mark-inject.js` | 可选小工具：给酒馆页面加"开源免费·被骗加群"水印标注（想自己分享给朋友时用，跑 `node patch/mark-inject.js` 即可） |
 
